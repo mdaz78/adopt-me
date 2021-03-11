@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import Pet from "./Pet";
+import Results from "./Results";
 
 import useBreedList from "./useBreedList";
 
@@ -28,7 +28,12 @@ export default function SearchParams() {
 
   return (
     <div className="search-params">
-      <form>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          requestPets();
+        }}
+      >
         <label htmlFor="location">
           Location
           <input
@@ -75,9 +80,7 @@ export default function SearchParams() {
         <button>Submit</button>
       </form>
 
-      {pets.map(({ id: key, name, animal, breed }) => (
-        <Pet name={name} animal={animal} breed={breed} key={key} />
-      ))}
+      <Results pets={pets} />
     </div>
   );
 }
