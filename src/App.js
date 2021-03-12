@@ -1,10 +1,11 @@
-import { StrictMode, useState } from "react";
+import { StrictMode, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
 
 import ThemeContext from "./ThemeContext";
-import SearchParams from "./SearchParams";
-import Details from "./Details";
+
+const Details = lazy(() => import("./Details"));
+const SearchParams = lazy(() => import("./SearchParams"));
 
 const App = () => {
   const theme = useState("darkblue");
@@ -12,21 +13,23 @@ const App = () => {
   return (
     <ThemeContext.Provider value={theme}>
       <div>
-        <Router>
-          <header>
-            <Link to="/">
-              <h1>Adopt Me!</h1>
-            </Link>
-          </header>
-          <Switch>
-            <Route path="/details/:id">
-              <Details />
-            </Route>
-            <Route path="/" exact>
-              <SearchParams />
-            </Route>
-          </Switch>
-        </Router>
+        <Suspense fallback={<h2>Loading route ...</h2>}>
+          <Router>
+            <header>
+              <Link to="/">
+                <h1>Adopt Me!</h1>
+              </Link>
+            </header>
+            <Switch>
+              <Route path="/details/:id">
+                <Details />
+              </Route>
+              <Route path="/" exact>
+                <SearchParams />
+              </Route>
+            </Switch>
+          </Router>
+        </Suspense>
       </div>
     </ThemeContext.Provider>
   );
