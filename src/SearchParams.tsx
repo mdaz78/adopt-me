@@ -1,29 +1,36 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, {
+  FunctionComponent,
+  useEffect,
+  useState,
+  useContext,
+} from "react";
+
+import { Animal, PetAPIResponse, Pet } from "./APIResponseType";
 
 import Results from "./Results";
 import ThemeContext from "./ThemeContext";
 
 import useBreedList from "./useBreedList";
 
-const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
+const ANIMALS: Animal[] = ["bird", "cat", "dog", "rabbit", "reptile"];
 
-export default function SearchParams() {
+const SearchParams: FunctionComponent = () => {
   const [location, setLocation] = useState("");
-  const [animal, setAnimal] = useState("");
+  const [animal, setAnimal] = useState("" as Animal);
   const [breed, setBreed] = useState("");
-  const [pets, setPets] = useState([]);
-  const [breeds] = useBreedList(animal);
+  const [pets, setPets] = useState([] as Pet[]);
+  const [breeds] = useBreedList(animal as Animal);
   const [theme, setTheme] = useContext(ThemeContext);
 
   useEffect(() => {
-    requestPets();
+    void requestPets();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function requestPets() {
     const res = await fetch(
       `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
     );
-    const json = await res.json();
+    const json = (await res.json()) as PetAPIResponse;
 
     setPets(json.pets);
   }
@@ -33,7 +40,7 @@ export default function SearchParams() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          requestPets();
+          void requestPets();
         }}
       >
         <label htmlFor="location">
@@ -50,8 +57,8 @@ export default function SearchParams() {
           <select
             id="animal"
             value={animal}
-            onChange={(e) => setAnimal(e.target.value)}
-            onBlur={(e) => setAnimal(e.target.value)}
+            onChange={(e) => setAnimal(e.target.value as Animal)}
+            onBlur={(e) => setAnimal(e.target.value as Animal)}
           >
             <option />
             {ANIMALS.map((animal) => (
@@ -100,4 +107,6 @@ export default function SearchParams() {
       <Results pets={pets} />
     </div>
   );
-}
+};
+
+export default SearchParams;

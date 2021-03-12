@@ -1,7 +1,8 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import Pet from "./Pet";
+import { Pet as PetType } from "./APIResponseType";
 
-export default function Results({ pets }) {
+const Results: FunctionComponent<{ pets: PetType[] }> = ({ pets }) => {
   return (
     <div className="search">
       {/* {pets.map(({ id: key, name, animal, breed }) => (
@@ -25,4 +26,6 @@ export default function Results({ pets }) {
       )}
     </div>
   );
-}
+};
+
+export default Results;
